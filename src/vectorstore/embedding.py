@@ -1,5 +1,6 @@
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
+from config import OPENAI_API_KEY
 
 def create_vectorstore(documents):
     """
@@ -14,16 +15,6 @@ def create_vectorstore(documents):
     vectorstore = FAISS.from_documents(documents, embeddings)
     return vectorstore
 
-def retrieve_similar_documents(vectorstore, query, k=5):
-    """
-    Retrieves similar documents from the vector store based on the given query.
-
-    Args:
-        vectorstore (FAISS): The FAISS vector store.
-        query (str): The query string to search for similar documents.
-        k (int): The number of similar documents to retrieve.
-    Returns:
-        list: A list of similar documents.
-    """
-    retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":3})
-    return retriever.get_relevant_documents(query)
+def get_embeddings():
+    """Returns embeddings object for loading vectorstore."""
+    return OpenAIEmbeddings(model="text-embedding-3-small", openai_api_key=OPENAI_API_KEY)
